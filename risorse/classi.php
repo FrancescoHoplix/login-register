@@ -12,6 +12,21 @@ function conferma($risultato){
         die('Richiesta fallita' . mysqli_error($connessione));
     }
 }
+function creaAvviso($msg) {
+    if (!empty($msg)) {
+        $_SESSION["messaggio"] = $msg;
+    } else {
+        $msg = "";
+    }
+}
+
+function mostraAvviso() {
+    if (isset($_SESSION["messaggio"])) {
+        echo $_SESSION["messaggio"];
+        unset($_SESSION["messaggio"]);
+    }
+}
+
 class DatabaseConnection {
     public function connect() {
         $connessione = new mysqli(DB_HOST, DB_UTENTE, DB_PASSWORD, DB_NOME);
@@ -57,6 +72,34 @@ class Utente {
                 $this->conferma($risultato);
                 echo "Registrazione completata con successo!";
             }
+        }
+    }
+    function processRegistration() {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $utente = new Utente();
+            $nome = $_POST['nome'];
+            $cognome = $_POST['cognome'];
+            $codiceFiscale = $_POST['codice_fiscale'];
+            $email = $_POST['email'];
+            $confermaEmail = $_POST['conferma_email'];
+            $indirizzo = $_POST['indirizzo'];
+            $citta = $_POST['citta'];
+            $cap = $_POST['cap'];
+            $provincia = $_POST['provincia'];
+            $password = $_POST['password'];
+    
+            if ($email !== $confermaEmail) {
+                // Se le email non coincidono, reindirizza a error.php
+                header("Location: error.php");
+                exit();  // Assicurati di chiamare exit() dopo header()
+            }
+    
+            // Altrimenti, se le email coincidono, registra l'utente
+            $utente->registraUtente($nome, $cognome, $codiceFiscale, $email, $confermaEmail, $indirizzo, $citta, $cap, $provincia, $password);
+    
+            // Dopo aver registrato l'utente, reindirizza a myarea.php
+            header("Location: myarea.php");
+            exit();
         }
     }
     
@@ -127,7 +170,53 @@ if (isset($_POST['login'])) {
     $utente->effettuaLogin($email, $password);
 }
     }
-    
+    public function gestisciAccesso() {
+        // Verifica se l'utente è già loggato, in tal caso reindirizza a myarea.php
+        if (isset($_SESSION['utente_loggato']) && $_SESSION['utente_loggato'] === true) {
+            header("Location: myarea.php");
+            exit();
+        }
+
+        // Se il modulo di login è stato inviato
+        if (isset($_POST['login'])) {
+            // Recupera le credenziali inviate tramite il modulo
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+
+            // Esegui la funzione effettuaLogin
+            $this->effettuaLogin($email, $password);
+        }
+    }
+    public function recuperaDatiUtente() {
+        // Verifica se l'utente è loggato
+        if (!isset($_SESSION['utente_loggato'])) {
+            // L'utente non è loggato, reindirizza alla pagina di login
+            header("Location: login.php");
+            exit();
+        }
+
+        // Recupera l'email dell'utente dalla sessione
+        $email_utente = $_SESSION['email_utente'];
+
+        // Seleziona i dati dell'utente corrente dalla tabella "utenti"
+        $sql = "SELECT * FROM utenti WHERE email = ?";
+        $stmt = $this->connessione->prepare($sql);
+
+        if (!$stmt) {
+            die('Errore nella preparazione della query: ' . $this->connessione->error);
+        }
+
+        $stmt->bind_param("s", $email_utente);
+
+        if (!$stmt->execute()) {
+            die('Errore nell\'esecuzione della query: ' . $stmt->error);
+        }
+
+        $result = $stmt->get_result();
+
+        // Restituisci i dati dell'utente
+        return $result->fetch_assoc();
+    }
     public function eliminaUtente($id_utente) {
         // Esegui la query di eliminazione
         $sql_elimina = "DELETE FROM utenti WHERE id = $id_utente";
@@ -172,5 +261,33 @@ if (isset($_POST['login'])) {
         // Puoi anche gestire l'output o le notifiche qui
         echo "Inserimento utente completato con successo!";
     }
+    public function gestisciInserimentoUtente() {
+        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
+            // Recupera i dati dal modulo
+            $nome = $_POST['nome'];
+            $cognome = $_POST['cognome'];
+            $codiceFiscale = $_POST['codice_fiscale'];
+            $email = $_POST['email'];
+            $confermaEmail = $_POST['conferma_email'];
+            $indirizzo = $_POST['indirizzo'];
+            $citta = $_POST['citta'];
+            $cap = $_POST['cap'];
+            $provincia = $_POST['provincia'];
+            $password = $_POST['password'];
+            $ruolo = $_POST['ruolo'];
+
+            // Esegui la funzione per inserire l'utente
+            $this->inserisciUtente($nome, $cognome, $codiceFiscale, $email, $confermaEmail, $indirizzo, $citta, $cap, $provincia, $password, $ruolo);
+
+            // Crea un avviso
+            creaAvviso('Hai inserito correttamente utente');
+
+            // Reindirizza a una pagina specifica dopo l'inserimento
+            header("Location: index.php");
+            exit();
+        }
+    }
     
 }
+
+

@@ -1,3 +1,8 @@
+<?php
+$utente = new Utente();
+$utente->gestisciInserimentoUtente();
+?>
+
 <div class="container mt-2 py-5 text-warning">
     <h2>Inserisci Utente Manualmente</h2>
     <div class="d-flex justify-content-between">
@@ -5,7 +10,6 @@
         <p>Qui puoi visualizzare e aggiungere nuovi utenti. Oppure <span class="text-primary font-weight-bold"> -> </span>   </p>
          <a class="btn btn-info text-white p-1" href="index.php">Torna alla tua Dash.</a>
         </div>
-    <a class="btn btn-danger p-1 text-end" href="logout.php">LOGOUT</a>
 
     </div>
     <form action="inserisci_utente.php" method="POST">
@@ -62,9 +66,23 @@
             <input type="number" class="form-control" name="cap"  required>
         </div>
         <div class="mb-3">
-            <label for="provincia" class="form-label">Nuova Provincia:</label>
-            <input type="text" class="form-control text-uppercase" minlength="16" maxlength="2" name="provincia"  required>
-        </div>
+    <label for="provincia" class="form-label">Nuova Provincia:</label>
+    <div class="input-group">
+        <select class="form-select" name="provincia_select">
+            <?php
+            // Array delle province predefinite
+            $province_predefinite = array("RM", "NA", "MI", "FI");
+
+            // Scorrere l'array e generare le opzioni
+            foreach ($province_predefinite as $provincia) {
+                echo "<option value=\"$provincia\">$provincia</option>";
+            }
+            ?>
+        </select>
+        <input type="text" class="form-control text-uppercase" minlength="2" maxlength="2" name="provincia_input" required>
+    </div>
+</div>
+
         <div class="mb-3">
     <label for="ruolo" class="form-label">Nuovo Ruolo:</label>
     <select class="form-select" name="ruolo" required>

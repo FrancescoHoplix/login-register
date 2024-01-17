@@ -23,11 +23,11 @@ define('DB_NOME' , 'login');
 $connessione = mysqli_connect(DB_HOST , DB_UTENTE , DB_PASSWORD , DB_NOME);
 
 
-if(!$connessione){
-    echo 'non sei connesso';
-}else {
-    echo 'sei connesso';
-}
+// if(!$connessione){
+//     echo 'non sei connesso';
+// }else {
+//     echo 'sei connesso';
+// }
 
 require_once('classi.php');
 

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm bg-warning navbar-light border fixed-top mb-3">
+<nav class="navbar navbar-expand-sm bg-warning navbar-light border fixed-top mb-5">
   <div class="d-flex">
   <!-- Brand -->
   <a class="navbar-brand" href="https://hoplix.shop/">
@@ -11,10 +11,10 @@
         <a class="nav-link  text-white" href="index.php">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-white" href="login.php">Login</a>
+        <a class="nav-link text-white" href="login.php">Accedi</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-white" href="register.php">Register</a>
+        <a class="nav-link text-white" href="register.php">Registrati</a>
       </li>
     </ul>
   </div>

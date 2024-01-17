@@ -1,9 +1,13 @@
+<?php
+session_start(); // Avvia la sessione
+
+$utente = new Utente();
+$utente->gestisciAccesso();
+
+?>
+
 <div class="container">
-        <div class="body d-md-flex align-items-center justify-content-between h-75">
-            <div class="box-1 mt-md-0 mt-5">
-                <img src="https://images.pexels.com/photos/2033997/pexels-photo-2033997.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                    class="w-75" alt="">
-            </div>
+        <div class="body d-md-flex align-items-center justify-content-between ">
             <div class="container mt-5 text-warning">
    
         <h2 class="mb-4 ">Accedi</h2>
@@ -20,7 +24,7 @@
         </form>
         
 </div>
-            <div class="mt-5 w-25">
+            <div class="mt-5 ">
                     <p class="mb-1">Crea il tuo Account</p>
                     <p class="text-muted mb-2">Collegati con</p>
                     <div class="d-flex flex-column">

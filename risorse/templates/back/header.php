@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +18,6 @@
 </head>
 <body>
 
-<header class="mb-4">
+
     <!-- Navbar -->
-    <?php  include(FRONT_END . DS . 'navbar.php'); ?>
-</header>
+    <?php  include(BACK_END . DS . 'navbar.php'); ?>

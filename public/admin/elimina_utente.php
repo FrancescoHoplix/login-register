@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['elimina'])) {
 
     // Esegui la funzione eliminaUtente
     $eliminazione_successo = $utente->eliminaUtente($id_utente);
-
+    creaAvviso('Hai cancellato correttamente utente');
     if ($eliminazione_successo) {
         // Utente eliminato con successo, gestisci di conseguenza
         header("Location: index.php"); // Reindirizza alla pagina admin

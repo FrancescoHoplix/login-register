@@ -1,11 +1,58 @@
-<div class="container mt-2 py-5 ">
+<?php
+
+
+// Ottieni il numero totale di utenti
+$sql_n = "SELECT COUNT(*) as totalUtenti FROM utenti";
+$result = query($sql_n);
+$row_n = $result->fetch_assoc();
+$totalUtenti = $row_n['totalUtenti'];
+
+// Verifica se l'utente è loggato
+if (!isset($_SESSION['utente_loggato'])) {
+    // L'utente non è loggato, reindirizza alla pagina di login
+    header("Location: ../login.php");
+    exit();
+}
+
+// Recupera l'email dell'utente dalla sessione
+$email_utente = $_SESSION['email_utente'];
+
+// Seleziona il ruolo dell'utente dalla tabella "utenti"
+$sql = "SELECT ruolo FROM utenti WHERE email = '$email_utente'";
+$result = query($sql);
+// Seleziona tutti i dati dalla tabella "utenti"
+
+// Verifica se l'utente ha il ruolo "admin"
+if ($result->num_rows === 1) {
+    $row = $result->fetch_assoc();
+    $ruolo_utente = $row['ruolo'];
+
+    if ($ruolo_utente !== 'admin') {
+        // L'utente non ha il ruolo "admin", reindirizza a una pagina di errore o altrove
+        header("Location: errore.php"); 
+        exit();
+    }
+} 
+?>
+
+<!--Sidebar-->
+
+
+
+<div class="container mt-2 py-5 d-flex justify-content-around ">
+    <div>
+    <?php 
+    //  include(BACK_END . DS . 'sidebar.php'); 
+     ?>
+
+    </div>
+    <div>
     <h2 class="text-warning">Benvenuto ADMIN!</h2>
     <div class="d-flex justify-content-between">
         <div class="d-flex">
         <p>Qui puoi visualizzare e gestire gli utenti. Oppure <span class="text-primary font-weight-bold"> -> </span>   </p>
          <a class="btn btn-info text-white p-1" href="inserisci_utente.php">Inseriscilo manualmente.</a>
         </div>
-    <a class="btn btn-danger p-1 text-end" href="logout.php">LOGOUT</a>
 
     </div>
     <?php echo "Benvenuto, <span class='text-uppercase font-weight-bold text-primary'>" . $email_utente . "</span>"; ?>
@@ -14,6 +61,7 @@
     <span class="badge bg-warning rounded text-white">
         <?php echo $totalUtenti; ?>
     </span>
+    <?php mostraAvviso();?>
 </p>
 
     <table class="table table-bordered mt-3">
@@ -66,5 +114,5 @@
         <?php endwhile; ?>
     </tbody>
 </table>
-
+</div>
 </div>
